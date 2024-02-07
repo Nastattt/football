@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1e824c;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    #field {
+      width: 600px;
+      height: 400px;
+      background-color: #75a31d;
+      border: 10px solid #255d17;
+      border-radius: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #ball {
+      width: 40px;
+      height: 40px;
+      background-image: url('https://ru.js.cx/clipart/ball.svg');
+      background-size: cover;
+      position: absolute;
+      cursor: pointer;
+      transition: transform 0.2s ease-in-out;
+    }
+
+    #ball:active {
+      transform: scale(1.2);
+    }
+
+    .goal {
+      width: 30px;
+      height: 120px;
+      background-color: #fff;
+      position: absolute;
+      top: 140px;
+    }
+
+    .goal.left {
+      left: 0;
+    }
+
+    .goal.right {
+      right: 0;
+    }
+
+    .goal:hover {
+      background-color: #ff0000;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="field">
+    <div id="ball"></div>
+    <div class="goal left"></div>
+    <div class="goal right"></div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const field = document.getElementById('field');
+      const ball = document.getElementById('ball');
+      const goals = document.querySelectorAll('.goal');
+
+      field.addEventListener('click', function (event) {
+        const fieldRect = field.getBoundingClientRect();
+        const offsetX = event.clientX - fieldRect.left;
+        const offsetY = event.clientY - fieldRect.top;
+
+        const ballWidth = ball.offsetWidth;
+        const ballHeight = ball.offsetHeight;
+        const newLeft = offsetX - ballWidth / 2;
+        const newTop = offsetY - ballHeight / 2;
+
+        const maxLeft = field.offsetWidth - ballWidth;
+        const maxTop = field.offsetHeight - ballHeight;
+        const finalLeft = Math.min(Math.max(0, newLeft), maxLeft);
+        const finalTop = Math.min(Math.max(0, newTop), maxTop);
+
+        ball.style.left = finalLeft + 'px';
+        ball.style.top = finalTop + 'px';
+
+        checkGoal(finalLeft, finalTop);
+      });
+
+      function checkGoal(x, y) {
+        goals.forEach(function (goal) {
+          const goalRect = goal.getBoundingClientRect();
+          if (x >= goalRect.left && x <= goalRect.right && y >= goalRect.top && y <= goalRect.bottom) {
+            alert('Гол!');
+          }
+        });
+      }
+    });
+  </script>
+
+</body>
+
+</html>
